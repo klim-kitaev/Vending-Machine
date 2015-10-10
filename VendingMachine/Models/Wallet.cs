@@ -5,70 +5,17 @@ using System.Web;
 
 namespace VendingMachine.Models
 {
-    public abstract class Wallet<T>
+    public class Wallet : UnitCollection<FaceValueTypes>
     {
-        protected List<IUnit<T>> _units;
-
-        private int _GetSum()
+        public Wallet(Dictionary<FaceValueTypes, int> _coins)
+            : base(_coins)
         {
-            int sum = 0;
-            foreach (IUnit<T> unit in _units)
-            {
-                sum += unit.Val;
-            }
-            return sum;
+
         }
 
-        public Wallet(Dictionary<T, int> unit_list)
+        protected override IUnit<FaceValueTypes> _UnitCreator(FaceValueTypes type)
         {
-            _units = _GetUnitList(unit_list);
+            return new Coin(type);
         }
-
-        protected List<IUnit<T>> _GetUnitList(Dictionary<T, int> unit_list)
-        {
-            List<IUnit<T>> ret = new List<IUnit<T>>();
-            foreach (var key in unit_list.Keys)
-            {
-                int count = unit_list[key];
-                IUnit<T> unit = _UnitCreator(key);
-                for (int i = 0; i < count; i++)
-                {
-                    ret.Add(unit);
-                }
-            }
-            return ret;
-        }
-
-        public int Sum { get { return _GetSum(); } }
-
-        public List<IUnit<T>> Units { get { return _units; } }
-
-        public Dictionary<T, int> GetSorted()
-        {
-            Dictionary<T, int> ret = _StartInitilization();
-            foreach (IUnit<T> unit in _units)
-            {
-                int val = ret[unit.Type];
-                val++;
-                ret[unit.Type] = val;
-            }
-            return ret;
-        }
-
-        /// <summary>
-        /// Начальная иницилизация всех возможных типов
-        /// </summary>
-        /// <returns></returns>
-        protected Dictionary<T, int> _StartInitilization()
-        {
-            Dictionary<T, int> ret = new Dictionary<T, int>();
-            foreach (T type in Enum.GetValues(typeof(T)))
-            {
-                ret.Add(type, 0);
-            }
-            return ret;
-        }
-
-        protected abstract IUnit<T> _UnitCreator(T type);
     }
 }
