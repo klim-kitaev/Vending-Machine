@@ -1,0 +1,41 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Web;
+
+namespace VendingMachine.Models
+{
+
+    public enum FaceValueTypes { One=1,Two=2,Five=5,Ten=10};
+    public enum ProductCatalogType {Tea=13,Coffee=18,MilkCoffe=12,Juice=35};
+
+    public abstract class Coin<T> where T : struct, IConvertible
+    {
+        protected T _coin;
+
+        public Coin(T coin)
+        {
+           if (!typeof(T).IsEnum) 
+           {
+              throw new ArgumentException("T must be an enumerated type");
+           }
+
+        }
+        public int Val
+        {
+            get { return _coin.ToInt32(CultureInfo.InvariantCulture); }
+        }
+
+        public abstract string GetName();
+    }
+
+    public class MoneyCoin:Coin<FaceValueTypes>
+    {
+
+        public override string GetName()
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
