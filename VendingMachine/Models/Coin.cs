@@ -5,49 +5,40 @@ using System.Web;
 
 namespace VendingMachine.Models
 {
-    public enum FaceValueTypes { One = 1, Two = 2, Five = 5, Ten = 10 };
+    public enum FaceValueTypes { One, Two, Five, Ten };
+
     public class Coin : IUnit<FaceValueTypes>
     {
-        private int _val;
-        private string _title;
         private FaceValueTypes _type;
 
         public Coin(FaceValueTypes f_type)
         {
-            switch (f_type)
+            _type = f_type;
+        }
+
+        public static Info GetInfo(FaceValueTypes type)
+        {
+            switch (type)
             {
                 case FaceValueTypes.One:
-                    _val = 1;
-                    _title = "1 руб";
-                    break;
+                    return new Info{Title="1 руб",Price=1};
                 case FaceValueTypes.Two:
-                    _val = 2;
-                    _title = "2 руб";
-                    break;
+                    return new Info { Title = "2 руб", Price = 2 };
                 case FaceValueTypes.Five:
-                    _val = 5;
-                    _title = "5 руб";
-                    break;
+                    return new Info { Title = "5 руб", Price = 5 };
                 case FaceValueTypes.Ten:
-                    _val = 10;
-                    _title = "10 руб";
-                    break;
+                    return new Info{Title="10 руб",Price=10};
             }
-        }
-
-        public string Title
-        {
-            get { return _title; }
-        }
-
-        public int Val
-        {
-            get { return _val; }
+            return null;
         }
 
         public FaceValueTypes Type
         {
             get { return _type; }
+        }
+        public Info Info
+        {
+            get { return Coin.GetInfo(_type); }
         }
     }
 }

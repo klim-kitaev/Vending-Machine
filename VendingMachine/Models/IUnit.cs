@@ -7,9 +7,7 @@ namespace VendingMachine.Models
 {
     public interface IUnit<T>
     {
-        string Title { get; }
-        int Val { get; }
         T Type { get; }
-
+        Info Info {get;}
     }
 }

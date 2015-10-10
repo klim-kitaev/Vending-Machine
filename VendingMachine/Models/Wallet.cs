@@ -17,5 +17,6 @@ namespace VendingMachine.Models
         {
             return new Coin(type);
         }
+        
     }
 }

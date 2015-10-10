@@ -14,7 +14,7 @@ namespace VendingMachine.Models
             int sum = 0;
             foreach (IUnit<T> unit in _units)
             {
-                sum += unit.Val;
+                sum += unit.Info.Price;
             }
             return sum;
         }
@@ -42,6 +42,21 @@ namespace VendingMachine.Models
         public int Sum { get { return _GetSum(); } }
 
         public List<IUnit<T>> Units { get { return _units; } }
+
+        public bool Remove(T type)
+        {
+            IUnit<T> unit=_units.Where(p=>p.Type.Equals(p)).FirstOrDefault();
+            if(unit!=null)
+            {
+                return _units.Remove(unit);
+            }
+            return false;
+        }
+
+        public virtual void Add(List<IUnit<T>> units)
+        {
+            _units.AddRange(units);
+        }
 
         public Dictionary<T, int> GetSorted()
         {
