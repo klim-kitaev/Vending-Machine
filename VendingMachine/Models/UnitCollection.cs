@@ -45,7 +45,7 @@ namespace VendingMachine.Models
 
         public bool Remove(T type)
         {
-            IUnit<T> unit=_units.Where(p=>p.Type.Equals(p)).FirstOrDefault();
+            IUnit<T> unit=_units.Where(p=>p.Type.Equals(type)).FirstOrDefault();
             if(unit!=null)
             {
                 return _units.Remove(unit);

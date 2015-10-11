@@ -28,6 +28,19 @@ namespace VendingMachine.Models
             Add(new List<IUnit<FaceValueTypes>> { coin });
         }
 
+        public bool Buy(int price)
+        {
+            if(_money_cache>=price)
+            {
+                _money_cache -= price;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
         public List<Coin> ReturnCache()
         {
@@ -48,7 +61,7 @@ namespace VendingMachine.Models
                 //Сколько у нас их есть
                 int have_coins=avail_coins.Where(p=>p.Key.Info.Price==values[i]).Select(p=>p.Value).First();
                 //Если у нас есть такое кол-во данных монет то возвращаем его, иначе отдаем что есть
-                if(need_coins<have_coins)
+                if(need_coins>have_coins)
                 {
                     need_coins = have_coins;
                 }

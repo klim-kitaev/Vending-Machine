@@ -40,5 +40,13 @@ namespace VendingMachine.Models
         {
             get { return Coin.GetInfo(_type); }
         }
+
+        public override bool Equals(object obj)
+        {
+            Coin coin = obj as Coin;
+            if (coin == null)
+                return false;
+            return this.Type==coin.Type;
+        }
     }
 }

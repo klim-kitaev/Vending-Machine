@@ -46,20 +46,97 @@ namespace VendingMachine.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Отсортированный кошелек VM
+        /// </summary>
+        /// <returns></returns>
         public ActionResult GetVMWallet()
         {
             return View(vwWallet.GetSorted());
         }
 
+        /// <summary>
+        /// Отсортированный кошелек пользователя
+        /// </summary>
+        /// <returns></returns>
         public ActionResult GetUserWallet()
         {
             return View(userWallet.GetSorted());
         }
 
+        /// <summary>
+        /// Список продуктов машины
+        /// </summary>
+        /// <returns></returns>
         public ActionResult GetProductCatatalog()
         {
             return View(productCatalog.GetSorted());
         }
 
+        /// <summary>
+        /// поле "Внесенная сумма"
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult GetMoneyCache()
+        {
+            return Json(vwWallet.MoneyCache,JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Пользователь вносит деньги
+        /// </summary>
+        /// <param name="s_type"></param>
+        /// <returns></returns>
+        public JsonResult EnterMoney(string s_type)
+        {
+            bool res = false;
+            try
+            {
+                FaceValueTypes type = (FaceValueTypes)Enum.Parse(typeof(FaceValueTypes), s_type);
+                Coin coin = new Coin(type);
+                userWallet.Remove(type);
+                vwWallet.Add(coin);
+                res = true;
+            }
+            catch{}
+            return Json(res, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// Пользователь нажимает кнопку купить
+        /// </summary>
+        /// <param name="p_type"></param>
+        /// <returns></returns>
+        public ContentResult Buy(string p_type)
+        {
+            string res = "";
+            try
+            {
+                ProductTypes type = (ProductTypes)Enum.Parse(typeof(ProductTypes), p_type);
+                Product product = new Product(type);
+                if (vwWallet.Buy(product.Info.Price))
+                {
+                    productCatalog.Remove(type);
+                    res = "<div class=\"alert alert-success\" role=\"alert\">Спасибо!</div>";
+                }
+                else
+                {
+                    res = "<div class=\"alert alert-danger\" role=\"alert\">Недостаточно средств</div>";
+                }
+            }
+            catch { }
+            return Content(res);
+        }
+
+        /// <summary>
+        /// Пользователь запрашивает сдачу 
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult GetChange()
+        {
+            List<Coin> coins = vwWallet.ReturnCache();
+            userWallet.Add(coins);
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
     }
 }

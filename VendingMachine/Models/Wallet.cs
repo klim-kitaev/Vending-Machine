@@ -18,5 +18,9 @@ namespace VendingMachine.Models
             return new Coin(type);
         }
         
+        public void Add(List<Coin> coins)
+        {
+            _units.AddRange(coins);
+        }
     }
 }
